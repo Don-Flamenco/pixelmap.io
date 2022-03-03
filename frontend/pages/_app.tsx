@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
+// import React, { useState, useEffect, createContext } from 'react';
 
-import { Web3ReactProvider } from '@web3-react/core';
+import { AccountProvider } from '../utils/AccountContext';
 
-import getLibrary from '../utils/getLibrary';
-import Layout from '../components/Layout'
-
-import '../styles/globals.css'
+import '../styles/globals.css';
 
 function App({ Component, pageProps }) {
-
-  return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Component {...pageProps} />
-    </Web3ReactProvider>
-  )
+    return (
+        <AccountProvider>
+            <Component {...pageProps} />
+        </AccountProvider>
+    );
 }
 
-export default App
+export default App;

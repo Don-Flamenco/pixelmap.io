@@ -1,43 +1,64 @@
-import React, { useContext } from "react";
-import { useWeb3React } from "@web3-react/core";
-import { Switch } from "@headlessui/react";
+import React from 'react';
+import { useAccount } from '../utils/AccountContext';
 
 export default function MapToggles({
-  showOwned,
-  setShowOwned,
-  showForSale,
-  setShowForSale,
+    showOwned,
+    setShowOwned,
+    showForSale,
+    setShowForSale,
+    showMintable,
+    setShowMintable,
 }) {
-  const { account } = useWeb3React();
+    const { account, setAccount } = useAccount();
 
-  return (
-    <div className="flex space-x-4">
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-900 bg-opacity-70 border border-white">
-        <label
-          className="my-0">
-          <input
-            type="checkbox"
-            className="nes-checkbox is-dark"
-            checked={showForSale}
-            onChange={(e) => setShowForSale(e.currentTarget.checked)}
-          />
-          <span className="font-bold text-sm">For Sale</span>
-        </label>
-      </span>
-      {account && account != "" && (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-900 bg-opacity-70 border border-white">
-          <label
-            className="my-0">
-            <input
-              type="checkbox"
-              className="nes-checkbox is-dark"
-              checked={showOwned}
-              onChange={(e) => setShowOwned(e.currentTarget.checked)}
-            />
-            <span className="font-bold text-sm">Owned</span>
-          </label>
-        </span>
-      )}
-    </div>
-  );
+    return (
+        <div className="flex space-x-4">
+            <span className="toggleButtons bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-100 bg-white border border-gray-400 text-gray-500  hover:bg-gray-100 rounded-lg px-3 py-2 text-center inline-flex items-center mx-1 mb-1 mt-2">
+                <label className="my-0">
+                    <input
+                        type="checkbox"
+                        className=""
+                        checked={showMintable}
+                        onChange={(e) =>
+                            setShowMintable(e.currentTarget.checked)
+                        }
+                    />
+
+                    <span className="font-normal text-sm ml-2">Mintable</span>
+                </label>
+            </span>
+
+            {account && account != '' && (
+                <span className="toggleButtons bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-100 bg-white border border-gray-400 text-gray-500  hover:bg-gray-100 rounded-lg px-3 py-2 text-center inline-flex items-center mx-1 mb-1 mt-2">
+                    <label className="my-0">
+                        <input
+                            type="checkbox"
+                            className=""
+                            checked={showOwned}
+                            onChange={(e) =>
+                                setShowOwned(e.currentTarget.checked)
+                            }
+                        />
+                        <span className="font-normal text-sm ml-2">Owned</span>
+                    </label>
+                </span>
+            )}
+            <span className="toggleButtons bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-100 bg-white border border-gray-400 text-gray-500  hover:bg-gray-100 rounded-lg px-3 py-2 text-center inline-flex items-center mx-1 mb-1 mt-2">
+                <label className="my-0 flex-col">
+                    <input
+                        type="checkbox"
+                        className=""
+                        checked={showForSale}
+                        onChange={(e) =>
+                            setShowForSale(e.currentTarget.checked)
+                        }
+                    />
+
+                    <span className="font-normal text-sm ml-2 whitespace-nowrap">
+                        For Sale
+                    </span>
+                </label>
+            </span>
+        </div>
+    );
 }

@@ -1,42 +1,95 @@
-@font-face {
-  font-family: 'vcr_osd_monoregular';
-  src: url('../public/assets/fonts/vcr_osd_mono.woff') format('woff2'),
-       url('../public/assets/fonts/vcr_osd_mono.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
+/* @import './nes.min.css'; */
+
+@import url('https://use.typekit.net/xoj4sur.css');
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+    html {
+        font-family: source-serif-4-caption, serif;
+        font-weight: 400;
+        font-style: normal;
+        cursor: pointer;
+    }
 }
 
-@import "./nes.min.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-html, body, #__next {
-  @apply relative w-full h-full;
+html,
+body,
+#__next {
+    @apply relative w-full h-full;
 }
 
 .img-pixel {
-  image-rendering: auto;
-  image-rendering: crisp-edges;
-  image-rendering: pixelated;
+    image-rendering: auto;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
 }
 
 .bg-blur {
-  backdrop-filter: blur(8px)
+    backdrop-filter: blur(1px);
 }
 
 .grid-background {
-  background-size: 100% 100%;
-  background-image:
-    linear-gradient(to right, grey 1px, transparent 1px),
-    linear-gradient(to bottom, grey 1px, transparent 1px);
+    background-size: 100% 100%;
+    background-image: linear-gradient(to right, grey 1px, transparent 1px),
+        linear-gradient(to bottom, grey 1px, transparent 1px);
 }
 
 .pixel-image {
-  image-rendering: pixelated;
+    image-rendering: pixelated;
 }
 
 .min-h-80 {
-  min-height: 80vh;
+    min-height: 80vh;
+}
+
+.wov-container {
+    @apply px-4 py-3 rounded-lg border border-gray-500 outline-none backdrop-filter backdrop-blur-sm;
+}
+
+input:checked ~ .dot {
+    transform: translateX(100%);
+    background-color: #48bb78;
+}
+
+input:disabled {
+    background-color: rgb(203, 203, 203);
+}
+
+.wovShadow {
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px,
+        rgba(17, 17, 26, 0.1) 0px 0px 8px;
+}
+
+.wovTileCard {
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
+        rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+}
+
+.wovHeadline {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+        rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+.toggleButtons {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+        rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+.active {
+    @apply border-b border-gray-400;
+}
+
+.wovAccount {
+    width: 17em;
+}
+
+.wovAccount:hover span {
+    display: none;
+}
+
+.wovAccount:hover:before {
+    content: 'Click to Sign Out';
 }

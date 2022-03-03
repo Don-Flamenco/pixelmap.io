@@ -1,76 +1,60 @@
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { formatUnits, parseUnits } from "@ethersproject/units";
-import { parse } from "path";
-import { PixelMapTile } from "@pixelmap/common/types/PixelMapTile";
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
+import { formatUnits, parseUnits } from '@ethersproject/units';
+import { WovMapTile } from '../common/WovMapTile';
 
 export function shortenIfHex(hex: string, length = 12) {
-  if (hex.length < length) {
-    return hex;
-  }
-  return `${hex.substring(0, length + 2)}…${hex.substring(
-    hex.length - length
-  )}`;
+    if (hex.length < length) {
+        return hex;
+    }
+    return `${hex.substring(0, length + 2)}…${hex.substring(
+        hex.length - length
+    )}`;
 }
 
-const ETHERSCAN_PREFIXES = {
-  1: "",
-  3: "ropsten.",
-  4: "rinkeby.",
-  5: "goerli.",
-  42: "kovan.",
-};
-
-export function formatEtherscanLink(
-  type: "Account" | "Transaction",
-  data: [number, string]
-) {
-  switch (type) {
-    case "Account": {
-      const [chainId, address] = data;
-      return `https://${ETHERSCAN_PREFIXES[chainId]}etherscan.io/address/${address}`;
-    }
-    case "Transaction": {
-      const [chainId, hash] = data;
-      return `https://${ETHERSCAN_PREFIXES[chainId]}etherscan.io/tx/${hash}`;
-    }
-  }
+export function formatVechainStatsLink(address: string) {
+    return `https://vechainstats.com/account/${address}`;
 }
 
 export const parseBalance = (
-  value: BigNumberish,
-  decimals = 18,
-  decimalsToDisplay = 3
+    value: BigNumberish,
+    decimals = 18,
+    decimalsToDisplay = 3
 ) => {
-  return new Intl.NumberFormat("en-US", {
-    currency: "USD",
-    style: "decimal",
-  }).format(parseFloat(formatUnits(value, decimals)));
+    return new Intl.NumberFormat('en-US', {
+        currency: 'USD',
+        style: 'decimal',
+    }).format(parseFloat(formatUnits(value, decimals)));
 };
 
 export const cleanUrl = (url: string) => {
-  let regex = new RegExp("^(http|https)://", "i");
+    let regex = new RegExp('^(http|https)://', 'i');
 
-  if (regex.test(url)) {
-    return url;
-  } else {
-    return `https://${url}`;
-  }
+    if (regex.test(url)) {
+        return url;
+    } else {
+        return `https://${url}`;
+    }
 };
 
-export const formatPrice = (tile: PixelMapTile) => {
-  let price = tile.openseaPrice;
+export const formatPrice = (tile: WovMapTile) => {
+    let price = tile.openseaPrice;
 
-  if (price === 0.0) {
-    return "–";
-  }
+    if (price === 0.0 || price === undefined) {
+        return '–';
+    }
 
-  return `${price}Ξ`;
+    return `${price}`;
 };
 
+// vesea
 export const openseaLink = (id: number) => {
-  return `https://opensea.io/assets/${process.env.NEXT_PUBLIC_PIXELMAP_WRAPPER_CONTRACT}/${id}`;
+    return `https://opensea.io/assets/${process.env.NEXT_PUBLIC_PIXELMAP_WRAPPER_CONTRACT}/${id}`;
+};
+
+export const veseaLink = (id: number) => {
+    return `https://www.vesea.io/assets?collection=wall_of_vame&id=${id}`;
 };
 
 export const convertEthToWei = (price: string) => {
-  return parseUnits(price || "0", "ether");
+    return parseUnits(price || '0', 'ether');
 };

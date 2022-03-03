@@ -1,0 +1,12 @@
+// testnet
+export const WOV_CONTRACT = '0xBAe19E8C489402A6Da101d872961563A1B8F0F59';
+
+// solo
+// export const WOV_CONTRACT = '0xaC85D4Bd621C514aFbe500052c98023a9A2ce5d5';
+
+export const TOPIC_UPDATE =
+    '0xb497d17d9ddaf07c831248da6ed8174689abdc4370285e618e350f29f5aff9a0';
+export const TOPIC_MINT =
+    '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+export const TOPIC_APPROVAL =
+    '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925';

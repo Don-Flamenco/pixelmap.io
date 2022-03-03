@@ -5,21 +5,16 @@ import Footer from '../components/Footer';
 
 import styles from '../styles/pages/Home.module.scss';
 
-export default function Layout({ children }) {
-  const hours = new Date().getHours();
-  const isDayTime = hours > 7 && hours < 20;
+export default function Layout(props: any) {
+    return (
+        <div
+            className={`relative w-full min-h-screen flex flex-col ${styles.wovBg}`}
+        >
+            <Header user={props.user} />
 
-  return (
-    <div className={`relative w-full min-h-screen flex flex-col
-      ${isDayTime ? styles.bgDay : styles.bgNight}`
-    }>
-      
-      <Header />
+            {props.children}
 
-      {children}
-
-      <Footer />
-
-    </div>
-  )
+            <Footer />
+        </div>
+    );
 }
