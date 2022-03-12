@@ -12,7 +12,6 @@ contract VeFame is ERC721Royalty, Ownable {
   string private baseTokenURIExtension;
   uint private mintPrice;
   uint16 private royaltyBasis;
-  address private zeroAddress;
   bytes32 private merkleRoot;
  
   struct TileData {
@@ -22,7 +21,6 @@ contract VeFame is ERC721Royalty, Ownable {
         uint price;
         }
 
-  
   mapping (uint => TileData) private tileData;
   mapping (address => bool) public whitelistClaimed;
 
@@ -31,7 +29,6 @@ contract VeFame is ERC721Royalty, Ownable {
   constructor() ERC721("Wall of Vame", "VAME") {
       mintPrice = 1000000000000000000000;
       royaltyBasis = 350; // 3.5%
-      zeroAddress = 0x0000000000000000000000000000000000000000;
   }
 
   function mintTo(address recipient, uint tokenId) public payable returns (uint256) {
@@ -44,7 +41,19 @@ contract VeFame is ERC721Royalty, Ownable {
     return tokenId;
   }
 
-  function whiteListMint(bytes32[] calldata _merkleProof, address recipient, uint tokenId) public returns (uint) {
+  function mintDetailed(address recipient, uint tokenId, string memory name, string memory image_data, string memory url) public onlyOwner returns (uint256) {
+    require(!_exists(tokenId), "Tile already minted");
+    require(tokenId < 3969, "Invalid tokenId");
+    
+    _safeMint(recipient, tokenId);
+    tileData[tokenId].name = name;
+    tileData[tokenId].image_data = image_data;
+    tileData[tokenId].url = url;
+    tileData[tokenId].price = 0;
+    return tokenId;
+  }
+
+  function whitelistMint(bytes32[] calldata _merkleProof, address recipient, uint tokenId) public returns (uint) {
     bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
     
     require(!whitelistClaimed[msg.sender], "Address has already claimed");
@@ -62,7 +71,6 @@ contract VeFame is ERC721Royalty, Ownable {
       mintPrice = _mintPrice;
   }
 
-  /// @dev Sets the base token URI prefix.
   function setBaseTokenURI(string memory _baseTokenURI) public onlyOwner {
     baseTokenURI = _baseTokenURI;
   }
@@ -71,19 +79,22 @@ contract VeFame is ERC721Royalty, Ownable {
     baseTokenURIExtension = _baseTokenURIExtension;
   }
 
-  function setTileData(uint tokenId, string memory name, string memory image_data, string memory url, uint price) public {
+  function setTileData(uint tokenId, string memory name, string memory image_data, string memory url) public {
       address owner = ERC721.ownerOf(tokenId);
       require(owner == _msgSender(), "You are not the owner");
           tileData[tokenId].name = name;
           tileData[tokenId].image_data = image_data;
           tileData[tokenId].url = url;
-          tileData[tokenId].price = price;
-          if (price > 0) {
-            approve(address(this), tokenId);
-          } else {
-            approve(zeroAddress, tokenId);
-          }
           emit TileUpdated(tokenId);
+  }
+
+  function setTilePrice(uint tokenId, uint price) public {
+      address owner = ERC721.ownerOf(tokenId);
+      require(owner == _msgSender(), "You are not the owner");
+      tileData[tokenId].price = price;
+      if (price > 0) {
+        approve(address(this), tokenId);
+      }
   }
 
   function getTile(uint tokenId) public view returns (string memory name, string memory image_data, string memory url, uint price, address owner, address approved) {
@@ -108,22 +119,16 @@ contract VeFame is ERC721Royalty, Ownable {
     royaltyBasis = _royaltyBasis;
   }
 
-  // Purchase an unclaimed Tile for 1000 VET.
   function buyTile(uint tokenId) public payable {
-      address admin = owner();
       address owner = ERC721.ownerOf(tokenId);
       uint salePrice = tileData[tokenId].price;
 
-      // Make sure person doesn't already own tile.
       require(owner != msg.sender, "You already own this token.");
       require(salePrice != 0, "Token not for sale.");
       require(salePrice == msg.value, "Incorrect price.");
       
-      uint adminRoyalty = uint((salePrice * royaltyBasis)/10000);
-      uint finalProceeds = salePrice - adminRoyalty;
-
+      uint finalProceeds = salePrice - ((salePrice * royaltyBasis)/10000);
       payable(owner).transfer(finalProceeds);
-      payable(admin).transfer(adminRoyalty);
       this.safeTransferFrom(owner, msg.sender, tokenId);
       tileData[tokenId].price = 0;
       emit TileUpdated(tokenId);
